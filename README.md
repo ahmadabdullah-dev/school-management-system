@@ -1,4 +1,15 @@
-# school-management-system
+# School Management System
+
+## Features
+
+### Auth
+- LoginAsync(LoginDto dto)
+- LogoutAsync()
+
+### Settings
+- IsDbConnected()
+  
+---
 
 ## Run Database Migration Commands
 
