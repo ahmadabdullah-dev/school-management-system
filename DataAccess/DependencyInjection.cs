@@ -20,6 +20,8 @@ public static class DependencyInjection{
 
         services.AddDataProtection();
 
+        services.AddScoped<ISettingsRepository, SettingsRepository>();
+
         return services;
     }
 }
