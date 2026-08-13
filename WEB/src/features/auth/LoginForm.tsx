@@ -14,10 +14,9 @@ import {
   Button,
   Alert,
   FormControlLabel,
-  Checkbox
+  Checkbox,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useNavigate } from "react-router";
 import type { LoginDto } from "../../lib/types/auth";
 
 export default function LoginForm() {
@@ -37,14 +36,12 @@ export default function LoginForm() {
     loginAsync.mutateAsync(creds, {
       onSuccess: () => {
         reset();
-        navigate("/dashboard")
       },
       onError: () => {
         resetField("password");
       },
     });
   };
-  const navigate = useNavigate();
   return (
     <Container maxWidth="sm">
       <Box
@@ -54,7 +51,7 @@ export default function LoginForm() {
           alignItems: "center",
           justifyContent: "center",
         }}
-      >    
+      >
         <Paper sx={{ p: 4, width: "100%" }}>
           <Typography variant="h3" sx={{ m: 2, textAlign: "center" }}>
             Login
@@ -63,7 +60,7 @@ export default function LoginForm() {
           <Box component="form" onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={2}>
               <TextField
-                label="Email"
+                label="Email: admin1@test.com"
                 type="email"
                 fullWidth
                 {...register("email", { required: "Email is required" })}
@@ -71,11 +68,14 @@ export default function LoginForm() {
                 helperText={errors.email?.message}
               />
               <TextField
-                label="Password"
+                label="Password: Pa$$w0rd"
                 type={showPassword ? "text" : "password"}
                 {...register("password", {
                   required: "Password is required",
-                  minLength: {value: 8, message: "Password must be at least 8 characters"},
+                  minLength: {
+                    value: 8,
+                    message: "Password must be at least 8 characters",
+                  },
                 })}
                 error={!!errors.password}
                 helperText={errors.password?.message}
@@ -102,7 +102,7 @@ export default function LoginForm() {
                 control={<Checkbox {...register("isPersistence")} />}
                 label="Remember me"
               />
-              
+
               <Button
                 type="submit"
                 variant="contained"
@@ -114,11 +114,10 @@ export default function LoginForm() {
                 ) : (
                   "Login"
                 )}
-              </Button>           
+              </Button>
               {loginAsync.error && (
                 <Alert severity="error">{loginAsync.error.message}</Alert>
               )}
-             
             </Stack>
           </Box>
         </Paper>
