@@ -1,14 +1,35 @@
 # School Management System
 
-## Features
+## API Features
 
 ### Auth
-- LoginAsync(LoginDto dto)
-- LogoutAsync()
+- `LoginAsync(LoginDto dto)`: Authenticates the user via ASP.NET Identity, using `SignInManager` to sign in with a cookie.
+- `LogoutAsync()`: Signs the user out via ASP.NET Identity's `SignOutManager`.
 
 ### Settings
-- IsDbConnected()
+- `IsDbConnected()`: Checks whether the database connection is active.
   
+### User 
+- `GetCurrentUser()`: Retrieves the current user by getting the user ID from `IHttpContextAccessor`.
+---
+
+## Web Features
+
+### Auth
+- `RequireAuth`: Guards authorized routes, preventing unauthenticated users from accessing them.
+- `LoginForm`: Takes email, password, and isPersistence, it sends them to the backend for validation. Navigates to the dashboard on success.
+- `LogoutButton`: Deletes the auth cookie from storage and navigates to the login page.
+
+### App
+- `Header`: Uses a ready-made MUI template. Contains the navigation bar. Valid on large screens.
+- `TemporaryDrawer`: Uses a ready-made MUI template. Inherits navigation items from `Header`. Valid on small screens.
+- `Footer`: Always stays at the bottom of the page. Contains copyright info.
+- `Dashboard`: The initial page shown after a user successfully logs in.
+
+### Error
+- `NotFound`: Shown when the user enters an invalid URL, handled via React Router.
+- `ErrorPage`: Shown in case of any error scenario, handled via React Router.
+
 ---
 
 ## Run Database Migration Commands
