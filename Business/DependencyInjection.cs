@@ -8,6 +8,7 @@ public static class DependencyInjection
         this IServiceCollection services)
     {
         services.AddScoped<ISettingsService,SettingsService>();
+        services.AddScoped<IAuthService,AuthService>();
        
         return services;
     }

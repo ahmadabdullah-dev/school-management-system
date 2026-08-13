@@ -2,3 +2,4 @@
 global using Business.Interfaces;
 global using Business.Services;
 global using DataAccess.Interfaces;
+global using Business.Dtos;

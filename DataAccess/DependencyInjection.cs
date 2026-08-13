@@ -13,11 +13,9 @@ public static class DependencyInjection{
                 opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
                 .LogTo(Console.WriteLine,LogLevel.Information).EnableSensitiveDataLogging();
         });
-
-        services.AddIdentityCore<IdentityUser>()
-       .AddRoles<IdentityRole>()
-       .AddEntityFrameworkStores<AppDbContext>()
-       .AddDefaultTokenProviders();
+        services.AddIdentity<IdentityUser, IdentityRole>()
+               .AddEntityFrameworkStores<AppDbContext>()
+               .AddDefaultTokenProviders();
 
         services.AddDataProtection();
 

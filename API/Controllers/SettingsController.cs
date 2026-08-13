@@ -1,10 +1,9 @@
-﻿using Business.Interfaces;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-//[Authorize]
+[Authorize(Roles =("Admin"))]
 public class SettingsController : BaseApiController
 {
     private readonly ISettingsService _settingsService;

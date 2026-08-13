@@ -39,7 +39,7 @@ public class DataSeeder
         var users = new List<(IdentityUser user, string role)>()
         {
             (new() {UserName = "admin1", Email= "admin1@test.com", EmailConfirmed = true},"Admin"),     
-            (new() {UserName = "admin2", Email= "admin2@test.unconfirmed.com", EmailConfirmed = true},"Admin"),
+            (new() {UserName = "admin2", Email= "admin2@test.com", EmailConfirmed = true},"Admin"),
 
         };
 
