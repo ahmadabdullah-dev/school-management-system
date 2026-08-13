@@ -15,13 +15,21 @@ public static class DependencyInjection{
         });
 
         services.AddIdentityCore<IdentityUser>()
+       .AddRoles<IdentityRole>()
        .AddEntityFrameworkStores<AppDbContext>()
        .AddDefaultTokenProviders();
 
         services.AddDataProtection();
 
+        services.AddScoped<DataSeeder>();
         services.AddScoped<ISettingsRepository, SettingsRepository>();
 
         return services;
+    }
+    public static async Task SeedDataAsync(this IServiceProvider serviceProvider)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+        await seeder.Seed();
     }
 }
