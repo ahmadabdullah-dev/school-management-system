@@ -6,5 +6,5 @@ public interface IStudentsService
     Task<Result<int>> GetAllStudentsCountAsync(string? status = null);
     Task<Result<StudentDto>> GetStudentByIdAsync(int id);
     Task<Result<StudentDto>> GetStudentByEmailAsync(string email);
-
+    Task<Result<string>> AddStudentAsync(AddStudentDto dto);
 }

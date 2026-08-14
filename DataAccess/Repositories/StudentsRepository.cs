@@ -78,5 +78,16 @@ public class StudentsRepository : IStudentsRepository
 
         return projection;
     }
+    public async Task<bool> IsEmailExists(string email)
+    {
+        return await _appDbContext.Students.AnyAsync(x => x.Email == email);
+    }
+    public async Task<int?> AddStudentAsync(Student student)
+    {
+        await _appDbContext.Students.AddAsync(student);
+        await _appDbContext.SaveChangesAsync();
+
+        return student.StudentId;
+    }
 }
 

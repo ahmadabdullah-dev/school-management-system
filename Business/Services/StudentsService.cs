@@ -1,4 +1,6 @@
-﻿namespace Business.Services;
+﻿using DataAccess.Entities;
+
+namespace Business.Services;
 
 public class StudentsService : IStudentsService
 {
@@ -77,5 +79,27 @@ public class StudentsService : IStudentsService
         };
 
         return Result<StudentDto>.Success(dto);
+    }
+    public async Task<Result<string>> AddStudentAsync(AddStudentDto student)
+    {
+        var studentEntity = new Student
+        {
+            FirstName= student.FirstName,
+            LastName = student.LastName,
+            Email = student.Email,
+            DateOfBirth = student.DateOfBirth,
+            PhoneNumber = student.PhoneNumber,
+            RegisteredAt = DateTime.UtcNow,
+            Status = student.Status,
+        };
+
+        if (await _studentRepository.IsEmailExists(student.Email))
+            return Result<string>.Failure("Email already exists",400);
+
+        var addResult = await _studentRepository.AddStudentAsync(studentEntity);
+       
+        return addResult != null 
+            ? Result<string>.Success("Student added successfully") 
+            : Result<string>.Failure("Unexpected error happened", 404); 
     }
 }

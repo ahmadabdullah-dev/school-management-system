@@ -37,4 +37,10 @@ public class StudentsController : BaseApiController
         var result = await _studentsService.GetStudentByEmailAsync(email);
         return HandleResult(result);
     }
+    [HttpPost]
+    public async Task<IActionResult> AddStudentAsync([FromBody] AddStudentDto dto)
+    {
+        var result = await _studentsService.AddStudentAsync(dto);
+        return HandleResult(result);
+    }
 }
