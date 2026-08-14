@@ -130,8 +130,9 @@ public class StudentsService : IStudentsService
         if((dto.DateOfBirth.HasValue))
             entity.DateOfBirth = dto.DateOfBirth.Value;
 
+        if (!string.IsNullOrEmpty(dto.Status))
+            entity.Status = dto.Status;
 
-       
         var isUpdated = await _studentRepository.UpdateStudentAsync(entity);
 
         if (!isUpdated)
@@ -139,5 +140,5 @@ public class StudentsService : IStudentsService
 
         return Result<string>.Success("Student updated successfully");
     }
-
+ 
 }
