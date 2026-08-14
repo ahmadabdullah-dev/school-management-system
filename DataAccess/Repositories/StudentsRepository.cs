@@ -14,7 +14,7 @@ public class StudentsRepository : IStudentsRepository
     {    
         var FilteredQuery = _appDbContext.Students
             .AsNoTracking()
-            .Where(status != null ?  s => s.Status == status : s => s.Status != null)
+            .Where(s => status == null || s.Status == status)
             .Select(x => new StudentProjection
             {
                 StudentId = x.StudentId,
@@ -28,6 +28,14 @@ public class StudentsRepository : IStudentsRepository
             });
 
         return await PagedList<StudentProjection>.CreateAsync(FilteredQuery, p.Page, p.PageSize);
+    }
+    public async Task<int> GetAllStudentsCountAsync(string? status = null)
+    {
+        var studentsCount = await _appDbContext.Students
+            .Where(s => status == null || s.Status == status)
+            .CountAsync();
+
+        return studentsCount;
     }
 
 }

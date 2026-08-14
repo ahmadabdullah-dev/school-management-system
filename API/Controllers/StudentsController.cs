@@ -19,4 +19,10 @@ public class StudentsController : BaseApiController
         var result = await _studentsService.GetAllStudentsAsync(p,status);
         return HandleResult(result);
     }
+    [HttpGet("count")]
+    public async Task<IActionResult> GetAllStudentsCountAsync([FromQuery] string? status = null)
+    {
+        var result = await _studentsService.GetAllStudentsCountAsync(status);
+        return HandleResult(result);
+    }
 }

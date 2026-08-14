@@ -31,4 +31,9 @@ public class StudentsService : IStudentsService
         };
         return Result<PagedList<StudentDto>>.Success(dtos);
     }
+    public async Task<Result<int>> GetAllStudentsCountAsync(string? status = null)
+    { 
+        var studentsCount = await _studentRepository.GetAllStudentsCountAsync(status);
+        return Result<int>.Success(studentsCount);
+    }
 }
