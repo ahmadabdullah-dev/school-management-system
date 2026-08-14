@@ -69,10 +69,15 @@ public class DataSeeder
     {
         var studentIds = await _appDbContext.Students.Select(s => s.StudentId).ToListAsync();
         var courseIds = await _appDbContext.Courses.Select(c => c.CourseId).ToListAsync();
-        if (!studentIds.Any() || !courseIds.Any()) return; 
+        if (!studentIds.Any() || !courseIds.Any()) return;
+
+        var seen = new HashSet<(int, int)>(
+            await _appDbContext.Enrollments
+                .Select(e => new { e.StudentId, e.CourseId })
+                .Select(e => ValueTuple.Create(e.StudentId, e.CourseId))
+                .ToListAsync());
 
         var statuses = new[] { "InProgress", "Completed", "Dropped" };
-        var random = new Random();
 
         var enrollmentFaker = new Faker<Enrollment>()
             .RuleFor(e => e.StudentId, f => f.PickRandom(studentIds))
@@ -89,7 +94,6 @@ public class DataSeeder
 
         var enrollments = enrollmentFaker.Generate(300);
 
-        var seen = new HashSet<(int, int)>();
         foreach (var enrollment in enrollments)
         {
             var key = (enrollment.StudentId, enrollment.CourseId);
