@@ -57,6 +57,7 @@ public class StudentsService : IStudentsService
 
         return Result<StudentDto>.Success(dto);
     }
+<<<<<<< HEAD
     public async Task<Result<StudentDto>> GetStudentByEmailAsync(string email)
     {
         var student = await _studentRepository.GetStudentByEmailAsync(email);
@@ -79,4 +80,6 @@ public class StudentsService : IStudentsService
         return Result<StudentDto>.Success(dto);
     }
 
+=======
+>>>>>>> fcda06575dfb768219b1acdb38190f1438b8f530
 }

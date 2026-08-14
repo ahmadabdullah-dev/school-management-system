@@ -57,6 +57,7 @@ public class StudentsRepository : IStudentsRepository
 
         return projection;
     }
+<<<<<<< HEAD
     public async Task<StudentProjection?> GetStudentByEmailAsync(string email)
     {
         var student = await _appDbContext.Students.FirstOrDefaultAsync(s => s.Email == email);
@@ -78,6 +79,8 @@ public class StudentsRepository : IStudentsRepository
 
         return projection;
     }
+=======
+>>>>>>> fcda06575dfb768219b1acdb38190f1438b8f530
 
 }
 
