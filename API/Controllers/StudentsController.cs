@@ -14,9 +14,9 @@ public class StudentsController : BaseApiController
     }
 
     [HttpGet("all")]
-    public async Task<IActionResult> GetAllStudentsAsync([FromQuery] PaginationParams p)
+    public async Task<IActionResult> GetAllStudentsAsync([FromQuery] PaginationParams p, [FromQuery] string? status = null)
     {
-        var result = await _studentsService.GetAllStudentsAsync(p);
+        var result = await _studentsService.GetAllStudentsAsync(p,status);
         return HandleResult(result);
     }
 }

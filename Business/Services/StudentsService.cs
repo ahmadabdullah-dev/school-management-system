@@ -2,15 +2,15 @@
 
 public class StudentsService : IStudentsService
 {
-    private readonly IStudentRepository _studentRepository;
-    public StudentsService(IStudentRepository studentRepository)
+    private readonly IStudentsRepository _studentRepository;
+    public StudentsService(IStudentsRepository studentRepository)
     {
         _studentRepository = studentRepository;
     }
 
-    public async Task<Result<PagedList<StudentDto>>> GetAllStudentsAsync(PaginationParams p)
+    public async Task<Result<PagedList<StudentDto>>> GetAllStudentsAsync(PaginationParams p, string? status = null)
     {
-        var students = await _studentRepository.GetAllStudentsAsync(p);
+        var students = await _studentRepository.GetAllStudentsAsync(p, status);
         var dtos = new PagedList<StudentDto>()
         {
             Items = students.Items.Select(x => new StudentDto
