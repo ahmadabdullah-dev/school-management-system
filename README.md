@@ -10,7 +10,17 @@
 - `IsDbConnected()`: Checks whether the database connection is active.
   
 ### User 
-- `GetCurrentUser()`: Retrieves the current user by getting the user ID from `IHttpContextAccessor`.
+- `GetCurrentUserAsync()`: Retrieves the current user by getting the user ID from `IHttpContextAccessor`.
+
+### Students
+- `GetAllStudentsAsync(PaginationParams p)`: Retrieves a paginated, projected list of students in efficient querying.
+
+### Common
+- `Result<T> Pattern`: Wraps success/failure state with data or error details, avoiding exception-based flow.
+- `PagedList`: Used to retrieve data from the database efficiently, applying pagination based on `PaginationParams`.
+
+### Data
+- `DataSeeder`: Seeds fake data for entities using the Bogus library.
 ---
 
 ## Web Features
