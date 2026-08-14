@@ -31,13 +31,10 @@ public class StudentsController : BaseApiController
         var result = await _studentsService.GetStudentByIdAsync(id);
         return HandleResult(result);
     }
-<<<<<<< HEAD
     [HttpGet("email")]
     public async Task<IActionResult> GetStudentByEmailAsync(string email)
     {
         var result = await _studentsService.GetStudentByEmailAsync(email);
         return HandleResult(result);
     }
-=======
->>>>>>> fcda06575dfb768219b1acdb38190f1438b8f530
 }
