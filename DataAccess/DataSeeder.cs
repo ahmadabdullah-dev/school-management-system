@@ -9,7 +9,7 @@ public class DataSeeder
     private readonly UserManager<IdentityUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly AppDbContext _appDbContext;
-    public DataSeeder(UserManager<IdentityUser> userManager, 
+    public DataSeeder(UserManager<IdentityUser> userManager,
         RoleManager<IdentityRole> roleManager,
         AppDbContext appDbContext)
     {
@@ -47,7 +47,7 @@ public class DataSeeder
     {
         var users = new List<(IdentityUser user, string role)>()
         {
-            (new() {UserName = "admin1", Email= "admin1@test.com", EmailConfirmed = true},"Admin"),     
+            (new() {UserName = "admin1", Email= "admin1@test.com", EmailConfirmed = true},"Admin"),
             (new() {UserName = "admin2", Email= "admin2@test.com", EmailConfirmed = true},"Admin"),
 
         };
@@ -65,46 +65,10 @@ public class DataSeeder
             }
         }
     }
-    public async Task SeedEnrollments()
-    {
-        var studentIds = await _appDbContext.Students.Select(s => s.StudentId).ToListAsync();
-        var courseIds = await _appDbContext.Courses.Select(c => c.CourseId).ToListAsync();
-        if (!studentIds.Any() || !courseIds.Any()) return;
-
-        var seen = new HashSet<(int, int)>(
-            await _appDbContext.Enrollments
-                .Select(e => new { e.StudentId, e.CourseId })
-                .Select(e => ValueTuple.Create(e.StudentId, e.CourseId))
-                .ToListAsync());
-
-        var statuses = new[] { "InProgress", "Completed", "Dropped" };
-
-        var enrollmentFaker = new Faker<Enrollment>()
-            .RuleFor(e => e.StudentId, f => f.PickRandom(studentIds))
-            .RuleFor(e => e.CourseId, f => f.PickRandom(courseIds))
-            .RuleFor(e => e.EnrollmentDate, f => DateTime.UtcNow.AddDays(-f.Random.Int(1, 300)))
-            .RuleFor(e => e.Status, f => f.PickRandom(statuses))
-            .RuleFor(e => e.ProgressPercent, (f, e) => e.Status == "Completed" ? 100 : f.Random.Decimal(0, 99))
-            .RuleFor(e => e.CompletionDate, (f, e) => e.Status == "Completed"
-                ? e.EnrollmentDate.AddDays(f.Random.Int(10, 90))
-                : null)
-            .RuleFor(e => e.FinalGrade, (f, e) => e.Status == "Completed"
-                ? f.Random.Decimal(50, 100)
-                : null);
-
-        var enrollments = enrollmentFaker.Generate(300);
-
-        foreach (var enrollment in enrollments)
-        {
-            var key = (enrollment.StudentId, enrollment.CourseId);
-            if (seen.Add(key))
-                await _appDbContext.Enrollments.AddAsync(enrollment);
-        }
-
-        await _appDbContext.SaveChangesAsync();
-    }
     public async Task SeedInstructors()
     {
+        if (await _appDbContext.Instructors.AnyAsync()) return;
+
         var instructorFaker = new Faker<Instructor>()
             .RuleFor(i => i.FirstName, f => f.Name.FirstName())
             .RuleFor(i => i.LastName, f => f.Name.LastName())
@@ -112,17 +76,11 @@ public class DataSeeder
             .RuleFor(i => i.HireDate, f => DateOnly.FromDateTime(f.Date.Past(15)))
             .RuleFor(i => i.Salary, f => f.Random.Decimal(40000, 120000))
             .RuleFor(i => i.IsActive, f => f.Random.Bool(0.9f))
-            .RuleFor(i => i.ManagerId, f => null); 
+            .RuleFor(i => i.ManagerId, f => null);
 
         var instructors = instructorFaker.Generate(10);
 
-        foreach (var instructor in instructors)
-        {
-            var exists = await _appDbContext.Instructors.AnyAsync(x => x.Email == instructor.Email);
-            if (!exists)
-                await _appDbContext.Instructors.AddAsync(instructor);
-        }
-
+        await _appDbContext.Instructors.AddRangeAsync(instructors);
         await _appDbContext.SaveChangesAsync();
 
         var saved = await _appDbContext.Instructors.ToListAsync();
@@ -141,8 +99,10 @@ public class DataSeeder
     }
     public async Task SeedCourses()
     {
+        if (await _appDbContext.Courses.AnyAsync()) return;
+
         var instructorIds = await _appDbContext.Instructors.Select(i => i.InstructorId).ToListAsync();
-        if (!instructorIds.Any()) return; 
+        if (!instructorIds.Any()) return;
 
         var levels = new[] { "Beginner", "Intermediate", "Advanced" };
         var statuses = new[] { "Draft", "Published", "Archived" };
@@ -161,17 +121,13 @@ public class DataSeeder
 
         var courses = courseFaker.Generate(10);
 
-        foreach (var course in courses)
-        {
-            var exists = await _appDbContext.Courses.AnyAsync(x => x.Code == course.Code);
-            if (!exists)
-                await _appDbContext.Courses.AddAsync(course);
-        }
-
+        await _appDbContext.Courses.AddRangeAsync(courses);
         await _appDbContext.SaveChangesAsync();
     }
     public async Task SeedStudents()
     {
+        if (await _appDbContext.Students.AnyAsync()) return;
+
         var statuses = new[] { "Active", "Inactive", "Suspended", "Graduated" };
 
         var studentFaker = new Faker<Student>()
@@ -186,13 +142,7 @@ public class DataSeeder
 
         var students = studentFaker.Generate(100);
 
-        foreach (var student in students)
-        {
-            var exists = await _appDbContext.Students.AnyAsync(x => x.Email == student.Email);
-            if (!exists)
-                await _appDbContext.Students.AddAsync(student);
-        }
-
+        await _appDbContext.Students.AddRangeAsync(students);
         await _appDbContext.SaveChangesAsync();
     }
     public async Task SeedStudentProfiles()
@@ -202,6 +152,8 @@ public class DataSeeder
             .Select(s => s.StudentId)
             .ToListAsync();
 
+        if (!studentIds.Any()) return;
+
         var profileFaker = new Faker<StudentProfile>()
             .RuleFor(p => p.Address, f => f.Address.StreetAddress())
             .RuleFor(p => p.City, f => f.Address.City())
@@ -209,13 +161,52 @@ public class DataSeeder
             .RuleFor(p => p.Bio, f => f.Lorem.Sentence(15))
             .RuleFor(p => p.LinkedInUrl, f => f.Internet.Url());
 
+        var profiles = new List<StudentProfile>();
         foreach (var studentId in studentIds)
         {
             var profile = profileFaker.Generate();
-            profile.StudentId = studentId; 
-            await _appDbContext.StudentProfiles.AddAsync(profile);
+            profile.StudentId = studentId;
+            profiles.Add(profile);
         }
 
+        await _appDbContext.StudentProfiles.AddRangeAsync(profiles);
+        await _appDbContext.SaveChangesAsync();
+    }
+    public async Task SeedEnrollments()
+    {
+        if (await _appDbContext.Enrollments.AnyAsync()) return;
+
+        var studentIds = await _appDbContext.Students.Select(s => s.StudentId).ToListAsync();
+        var courseIds = await _appDbContext.Courses.Select(c => c.CourseId).ToListAsync();
+        if (!studentIds.Any() || !courseIds.Any()) return;
+
+        var seen = new HashSet<(int, int)>();
+        var statuses = new[] { "InProgress", "Completed", "Dropped" };
+
+        var enrollmentFaker = new Faker<Enrollment>()
+            .RuleFor(e => e.StudentId, f => f.PickRandom(studentIds))
+            .RuleFor(e => e.CourseId, f => f.PickRandom(courseIds))
+            .RuleFor(e => e.EnrollmentDate, f => DateTime.UtcNow.AddDays(-f.Random.Int(1, 300)))
+            .RuleFor(e => e.Status, f => f.PickRandom(statuses))
+            .RuleFor(e => e.ProgressPercent, (f, e) => e.Status == "Completed" ? 100 : f.Random.Decimal(0, 99))
+            .RuleFor(e => e.CompletionDate, (f, e) => e.Status == "Completed"
+                ? e.EnrollmentDate.AddDays(f.Random.Int(10, 90))
+                : null)
+            .RuleFor(e => e.FinalGrade, (f, e) => e.Status == "Completed"
+                ? f.Random.Decimal(50, 100)
+                : null);
+
+        var enrollments = enrollmentFaker.Generate(300);
+
+        var toAdd = new List<Enrollment>();
+        foreach (var enrollment in enrollments)
+        {
+            var key = (enrollment.StudentId, enrollment.CourseId);
+            if (seen.Add(key))
+                toAdd.Add(enrollment);
+        }
+
+        await _appDbContext.Enrollments.AddRangeAsync(toAdd);
         await _appDbContext.SaveChangesAsync();
     }
 }
