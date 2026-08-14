@@ -43,4 +43,10 @@ public class StudentsController : BaseApiController
         var result = await _studentsService.AddStudentAsync(dto);
         return HandleResult(result);
     }
+    [HttpPut]
+    public async Task<IActionResult> UpdateStudentAsync([FromBody] UpdateStudentDto dto)
+    {
+        var result = await _studentsService.UpdateStudentAsync(dto);
+        return HandleResult(result);
+    }
 }

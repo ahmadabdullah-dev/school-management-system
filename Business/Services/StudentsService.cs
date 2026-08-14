@@ -1,4 +1,5 @@
 ﻿using DataAccess.Entities;
+using System.Numerics;
 
 namespace Business.Services;
 
@@ -102,4 +103,41 @@ public class StudentsService : IStudentsService
             ? Result<string>.Success("Student added successfully") 
             : Result<string>.Failure("Unexpected error happened", 404); 
     }
+    public async Task<Result<string>> UpdateStudentAsync(UpdateStudentDto dto)
+    {
+        var entity = await _studentRepository.GetStudentEntityByIdAsync(dto.StudentId);
+        
+        if (entity == null)
+            return Result<string>.Failure("Student not found", 404);
+      
+        if(!string.IsNullOrEmpty(dto.FirstName))
+            entity.FirstName = dto.FirstName;
+        
+        if(!string.IsNullOrEmpty(dto.LastName))
+            entity.LastName = dto.LastName;
+
+        if (!string.IsNullOrEmpty(dto.Email) && dto.Email != entity.Email)
+        {
+            if (await _studentRepository.IsEmailExists(dto.Email))
+                return Result<string>.Failure("Email already taken", 400);
+            
+            entity.Email = dto.Email;
+        }
+
+        if (!string.IsNullOrEmpty(dto.PhoneNumber))
+            entity.PhoneNumber = dto.PhoneNumber;
+       
+        if((dto.DateOfBirth.HasValue))
+            entity.DateOfBirth = dto.DateOfBirth.Value;
+
+
+       
+        var isUpdated = await _studentRepository.UpdateStudentAsync(entity);
+
+        if (!isUpdated)
+            return Result<string>.Failure("Unexpected errror happened", 400);
+
+        return Result<string>.Success("Student updated successfully");
+    }
+
 }

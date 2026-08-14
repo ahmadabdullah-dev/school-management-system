@@ -82,12 +82,23 @@ public class StudentsRepository : IStudentsRepository
     {
         return await _appDbContext.Students.AnyAsync(x => x.Email == email);
     }
+    public async Task<Student?> GetStudentEntityByIdAsync(int id)
+    {
+        return await _appDbContext.Students.FindAsync(id);
+    }
     public async Task<int?> AddStudentAsync(Student student)
     {
         await _appDbContext.Students.AddAsync(student);
         await _appDbContext.SaveChangesAsync();
 
         return student.StudentId;
+    }
+    public async Task<bool> UpdateStudentAsync(Student student)
+    {
+        _appDbContext.Students.Update(student);
+        var affected = await _appDbContext.SaveChangesAsync();
+
+        return affected > 0;
     }
 }
 
