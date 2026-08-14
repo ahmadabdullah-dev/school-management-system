@@ -90,7 +90,7 @@ public class StudentsService : IStudentsService
             DateOfBirth = student.DateOfBirth,
             PhoneNumber = student.PhoneNumber,
             RegisteredAt = DateTime.UtcNow,
-            Status = student.Status,
+            Status = StudentStatuses.ACTIVE,
         };
 
         if (await _studentRepository.IsEmailExists(student.Email))
