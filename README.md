@@ -1,4 +1,6 @@
 # School Management System
+A full-stack school management system built with .NET, React, and SQL Server. Authentication is handled via ASP.NET Identity, with Entity Framework Core as the ORM. The system supports a single Admin role with full control over the application, and demonstrates complete CRUD operations for every entity, with an emphasis on performance-optimized code and database-level filtering.
+
 
 ## API Features
 
