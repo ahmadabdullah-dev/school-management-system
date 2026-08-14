@@ -36,4 +36,47 @@ public class StudentsService : IStudentsService
         var studentsCount = await _studentRepository.GetAllStudentsCountAsync(status);
         return Result<int>.Success(studentsCount);
     }
+    public async Task<Result<StudentDto>> GetStudentByIdAsync(int id)
+    {
+        var student = await _studentRepository.GetStudentByIdAsync(id);
+
+        if (student == null)
+            return Result<StudentDto>.Failure("Student not found", 404);
+
+        var dto = new StudentDto
+        {
+            StudentId = student.StudentId,
+            FirstName = student.FirstName,
+            LastName = student.LastName,
+            Email = student.Email,
+            PhoneNumber = student.PhoneNumber,
+            DateOfBirth= student.DateOfBirth,
+            Status = student.Status,
+            RegisteredAt = student.RegisteredAt,
+        };
+
+        return Result<StudentDto>.Success(dto);
+    }
+    public async Task<Result<StudentDto>> GetStudentByEmailAsync(string email)
+    {
+        var student = await _studentRepository.GetStudentByEmailAsync(email);
+
+        if (student == null)
+            return Result<StudentDto>.Failure("Student not found", 404);
+
+        var dto = new StudentDto
+        {
+            StudentId = student.StudentId,
+            FirstName = student.FirstName,
+            LastName = student.LastName,
+            Email = student.Email,
+            PhoneNumber = student.PhoneNumber,
+            DateOfBirth = student.DateOfBirth,
+            Status = student.Status,
+            RegisteredAt = student.RegisteredAt,
+        };
+
+        return Result<StudentDto>.Success(dto);
+    }
+
 }

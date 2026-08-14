@@ -4,5 +4,7 @@ public interface IStudentsService
 {
     Task<Result<PagedList<StudentDto>>> GetAllStudentsAsync(PaginationParams p, string? status = null);
     Task<Result<int>> GetAllStudentsCountAsync(string? status = null);
+    Task<Result<StudentDto>> GetStudentByIdAsync(int id);
+    Task<Result<StudentDto>> GetStudentByEmailAsync(string email);
 
 }

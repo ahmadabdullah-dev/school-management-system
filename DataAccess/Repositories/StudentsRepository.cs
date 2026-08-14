@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Net.NetworkInformation;
 
 namespace DataAccess.Repositories;
 
@@ -36,6 +35,48 @@ public class StudentsRepository : IStudentsRepository
             .CountAsync();
 
         return studentsCount;
+    }
+    public async Task<StudentProjection?> GetStudentByIdAsync(int id)
+    {
+        var student = await _appDbContext.Students.FindAsync(id);
+       
+        if (student == null) 
+            return null;
+
+        var projection = new StudentProjection
+        {
+            StudentId = student.StudentId,
+            FirstName = student.FirstName,
+            LastName = student.LastName,
+            Email = student.Email,
+            PhoneNumber = student.PhoneNumber,
+            DateOfBirth = student.DateOfBirth,
+            Status = student.Status,
+            RegisteredAt = student.RegisteredAt,
+        };
+
+        return projection;
+    }
+    public async Task<StudentProjection?> GetStudentByEmailAsync(string email)
+    {
+        var student = await _appDbContext.Students.FirstOrDefaultAsync(s => s.Email == email);
+
+        if (student == null)
+            return null;
+
+        var projection = new StudentProjection
+        {
+            StudentId = student.StudentId,
+            FirstName = student.FirstName,
+            LastName = student.LastName,
+            Email = student.Email,
+            PhoneNumber = student.PhoneNumber,
+            DateOfBirth = student.DateOfBirth,
+            Status = student.Status,
+            RegisteredAt = student.RegisteredAt,
+        };
+
+        return projection;
     }
 
 }
