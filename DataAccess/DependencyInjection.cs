@@ -21,6 +21,7 @@ public static class DependencyInjection{
 
         services.AddScoped<DataSeeder>();
         services.AddScoped<ISettingsRepository, SettingsRepository>();
+        services.AddScoped<IStudentRepository, StudentsRepository>();
 
         return services;
     }

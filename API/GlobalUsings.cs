@@ -4,3 +4,4 @@ global using Business;
 global using Business.Interfaces;
 global using Business.Dtos;
 global using API;
+global using DataAccess.Common;
