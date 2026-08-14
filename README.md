@@ -13,7 +13,13 @@
 - `GetCurrentUserAsync()`: Retrieves the current user by getting the user ID from `IHttpContextAccessor`.
 
 ### Students
-- `GetAllStudentsAsync(PaginationParams p)`: Retrieves a paginated, projected list of students in efficient querying.
+- `GetAllStudentsAsync(PaginationParams p, string? status = null)`: Retrieves a paginated, projected list of students in efficient querying. If status filled it will retrive according to the status .
+- `GetAllStudentsCountAsync(string? status = null`: Returns the count of students with in Db Level filtering.  If status filled it will retrive according to the status .
+- `GetStudentByIdAsync(int id)`: Retrive Student By Id. Returns StudentDto
+- `GetStudentByEmailAsync(string email)`: Retrive Student By Email. Returns StudentDto
+- `IsEmailExistsAsync(string email)`: Returns boolean. DB has constains to not repeate the mails
+-  `AddStudentAsync(AddStudentDto dto)`: To create the student.
+-  `UpdateStudentAsync(UpdateStudentDto)`: To update the student.
 
 ### Common
 - `Result<T> Pattern`: Wraps success/failure state with data or error details, avoiding exception-based flow.
