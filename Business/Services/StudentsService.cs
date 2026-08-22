@@ -1,7 +1,4 @@
-﻿using DataAccess.Entities;
-using System.Numerics;
-
-namespace Business.Services;
+﻿namespace Business.Services;
 
 public class StudentsService : IStudentsService
 {
@@ -81,20 +78,20 @@ public class StudentsService : IStudentsService
 
         return Result<StudentDto>.Success(dto);
     }
-    public async Task<Result<string>> AddStudentAsync(AddStudentDto student)
+    public async Task<Result<string>> AddStudentAsync(AddStudentDto dto)
     {
         var studentEntity = new Student
         {
-            FirstName= student.FirstName,
-            LastName = student.LastName,
-            Email = student.Email,
-            DateOfBirth = student.DateOfBirth,
-            PhoneNumber = student.PhoneNumber,
+            FirstName= dto.FirstName,
+            LastName = dto.LastName,
+            Email = dto.Email,
+            DateOfBirth = dto.DateOfBirth,
+            PhoneNumber = dto.PhoneNumber,
             RegisteredAt = DateTime.UtcNow,
             Status = StudentStatuses.ACTIVE,
         };
 
-        if (await _studentRepository.IsEmailExists(student.Email))
+        if (await _studentRepository.IsEmailExists(dto.Email))
             return Result<string>.Failure("Email already exists",400);
 
         var addResult = await _studentRepository.AddStudentAsync(studentEntity);

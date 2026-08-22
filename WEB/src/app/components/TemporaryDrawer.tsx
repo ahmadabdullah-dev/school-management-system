@@ -85,7 +85,7 @@ export default function TemporaryDrawer({ items }: DrawerProps) {
                 letterSpacing: "0.18em",
               }}
             >
-              Social Plan Platform
+              Car Rental Platform
             </Typography>
             <IconButton
               onClick={toggleDrawer(false)}

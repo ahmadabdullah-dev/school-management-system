@@ -59,7 +59,7 @@ export default function Header() {
             userSelect: "none",
           }}
         >
-          School Management System
+          Car Rental Platform
         </Typography>
 
         <Stack

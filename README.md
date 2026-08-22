@@ -1,6 +1,5 @@
-# School Management System
-A full-stack school management system built with .NET, React, and SQL Server. Authentication is handled via ASP.NET Identity, with Entity Framework Core as the ORM. The system supports a single Admin role with full control over the application, and demonstrates complete CRUD operations for every entity, with an emphasis on performance-optimized code and database-level filtering.
-
+# Car Rental Platform
+A full-stack Car Rental Platform built with .NET, React, and SQL Server. Authentication is handled via ASP.NET Identity, with Entity Framework Core as the ORM. The platform allows admins to perform full CRUD operations on cars, while customers can rent cars, extend their rental time, return a car, view available cars, pay bills, and see their previous rental history, and many other features - with an emphasis on performance-optimized code and database-level filtering.
 
 ## API Features
 
